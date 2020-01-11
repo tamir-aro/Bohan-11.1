@@ -46,8 +46,8 @@
             return discount.getdiscounts();
         }
     }
-    
-    # Model
+  
+ # Model
         public class DiscountsController : ApiController
     {
 
@@ -88,7 +88,7 @@
         }
     }
     
-    # DBservices
+   # DBservices
     
         public List<Discounts> getdiscounts()
     {
