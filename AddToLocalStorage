@@ -1,0 +1,43 @@
+        function addToMyFlights(index) {
+            var airlinesToSplit = document.getElementById(`airlines${index}`).textContent;
+            var res1 = airlinesToSplit.split(" ", 2);
+            var res2 = res1[1].split(",", 1);
+            var res3 = res2.toString();
+
+            var myflt = {
+
+                "id": (mydata[index].id).toString(),
+                "price": mydata[index].price,
+                "flyFrom": mydata[index].cityCodeFrom,
+                "flyTo": mydata[index].cityCodeTo,
+                "departDate": document.getElementById(`dip_date${index}`).textContent,
+                "returnDate": document.getElementById(`arr_date${index}`).textContent,
+                "airlines": res3,
+            }
+
+            if (clickfaivoriate[index] == true) {
+                document.getElementById(`add${index}`).style.background = "#db0f13";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Cancel Favorite";
+                clickfaivoriate[index] = false;
+                localStorage.setItem(`${mydata[index].cityCodeFrom}myfivorite${index}`, JSON.stringify(myflt));
+            }
+            else {
+                document.getElementById(`add${index}`).style.background = "#4CAF50";
+                document.getElementById(`add${index}`).innerHTML = "";
+                document.getElementById(`add${index}`).innerHTML = "Add To Favoriate";
+                clickfaivoriate[index] = true;
+                localStorage.removeItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            }
+            x = localStorage.getItem(`${mydata[index].cityCodeFrom}myfivorite${index}`);
+            x = JSON.parse(x);
+            setTimeout(function () {
+                if (x != null) {
+                    console.log(x);
+                    ajaxCall("POST", "../api/Flights", JSON.stringify(x), postMyFltSuccess, postMyFltError);
+
+                }
+            }, 6000);
+
+
+        }
