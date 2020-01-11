@@ -64,6 +64,15 @@
             return false;
         }
         
+        
+                function updateSuccess(discountsdata) {
+            tbl.clear();
+            redrawTable(tbl, discountsdata);
+            buttonEvents();
+            $("#editDiv").hide();
+            swal("Updated Successfuly!", "Great Job", "success");
+            mode = "";
+        }
    
    
    
