@@ -1,0 +1,80 @@
+        function getFlightFunc() {
+            ajaxCall("GET", "../api/Discounts", "", getDiscountsSuccess, Discountserror);
+            ///////////////////////////////////////////מקבל פרטים ממשתמש ומאתחל תתאריכים ויעדים/
+            var from = $("#flyfrominput").val().toUpperCase();
+            var to = $("#flytoinput").val().toUpperCase();
+            var startDate = $("#departinput").val();
+            var returnDate = $("#returninput").val();
+            let Syear = startDate.substring(0, 4);
+            let Smonth = startDate.substring(5, 7);
+            let Sday = startDate.substring(8, 10);
+            let Tyear = returnDate.substring(0, 4);
+            let Tmonth = returnDate.substring(5, 7);
+            let Tday = returnDate.substring(8, 10);
+            startDate = Sday + "/" + Smonth + "/" + Syear;
+            returnDate = Tday + "/" + Tmonth + "/" + Tyear
+            /////////////////////////////////////////////////////////END/
+            ajaxCall("GET", "https://api.skypicker.com/flights?flyFrom=" + from + "&to=" + to + "&dateFrom=" + startDate + "&dateTo=" + returnDate + "&partner=amir", " ", DataGenertor, errorData);
+        }
+
+        function DataGenertor(data) {
+            console.log(data)
+            data = data.data;
+            mydata = data;
+            console.log(mydata);
+            clickfaivoriate = []
+            counterpass = []
+            ShowData(data);
+        }
+
+
+
+        function ShowData(data) {
+            document.getElementById('result').innerHTML = "";
+            for (var i = 0; i < data.length; i++) {
+                clickfaivoriate[i] = true; // check all faivoriate status
+                counterpass[i] = 0; //check who mach passenger order in same time
+                str = '';
+                str = `
+                                                    <div id="FlightsDiv">
+                                                    <h1>Flight Details:</h1>
+                                                    <div id="id${i}"> ${data[i].id}</div>
+
+                                                    <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                        <th> Price </th>
+                                                        <th> Departure </th>
+                                                        <th> Arrival Time </th>
+                                                        <th> Departure City </th>
+                                                        <th> Arrival City </th>
+                                                        <th> Airlines </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                    <td id="price${i}"> ${data[i].conversion.EUR} € </td>
+                                                    <td id="dip_date${i}"> ${new Date(data[i].dTimeUTC * 1000)} </td>
+                                                    <td id="arr_date${i}"> ${new Date(data[i].aTimeUTC * 1000)} </td>
+                                                    <td id="cityFrom${i}"> ${data[i].cityFrom}</td>
+                                                    <td id="cityTo${i}"> ${data[i].cityTo} </td>
+                                                    <td id="airlines${i}"> ${data[i].airlines} </td>
+                                                    </tr>
+                                                    </tbody>
+
+                                                    </table>`;
+
+                departuretime = new Date(data[i].dTimeUTC * 1000);
+                arrivaltime = new Date(data[i].aTimeUTC * 1000);
+                str += `<button type="button" id="add${i}" onclick="addToMyFlights(${i})">Add To Favoriate</button>`;
+                str += `<button type="button" id="order${i}" onclick="orderNow(${i})">Order Now</button>`;
+                str += `<h3> ${checkIfDiscount(data[i])}</h3>`;
+                str += ` <div id="orderCard${i}"></div></div>`;
+                document.getElementById('result').innerHTML += str;
+            }
+        }
+
+
+        function errorData(err) {
+            console.log(err);
+        }
