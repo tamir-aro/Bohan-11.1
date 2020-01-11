@@ -26,9 +26,9 @@
 
             $("#editDiv").hide();
         }); 
-        
-        ON SUBMIT!
-        --------------
+        --------------------------------------------------------------------
+        ON SUBMIT (TO SAVE RECORD)!
+        --------------------------------------------------------------------
                function onSubmitFunc() {
 
             discounttoSave = "";
@@ -65,7 +65,7 @@
         }
         
         
-                function updateSuccess(discountsdata) {
+         function updateSuccess(discountsdata) {
             tbl.clear();
             redrawTable(tbl, discountsdata);
             buttonEvents();
@@ -73,8 +73,65 @@
             swal("Updated Successfuly!", "Great Job", "success");
             mode = "";
         }
-   
-   
+        --------------------------------------------------------------------
+        FUNCTIONS FOR FORM
+        ----------------------------------------------------------------
+           function buttonEvents() {
+
+            $(document).on("click", ".editBtn", function () {
+                mode = "edit";
+                markSelected(this);
+                $("#editDiv").show();
+                $("#editDiv :input").prop("disabled", false); // edit mode: enable all controls in the form
+                populateFields(this.getAttribute('data-ID')); // fill the form fields according to the selected row
+            });
+
+            $(document).on("click", ".deleteBtn", function () {
+                mode = "delete";
+                markSelected(this);
+                var Id = this.getAttribute('data-ID');
+                swal({ // this will open a dialouge
+                    title: "Are you sure ??",
+                    text: "",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                })
+                    .then(function (willDelete) {
+                        if (willDelete) DeleteDiscount(Id);
+                        else swal("Not Deleted!");
+                    });
+            });
+        }
+
+        // mark the selected row
+        function markSelected(btn) {
+            $("#discountsTable tr").removeClass("selected"); // remove seleced class from rows that were selected before
+            row = (btn.parentNode).parentNode; // button is in TD which is in Row
+            row.className = 'selected'; // mark as selected
+        }
+  
+------------------------------------------------------------------------ 
+POPULATE FIELDS FOR EDIT
+---------------------------------------------------------------------
+        function populateFields(ID) {
+            discount = getDiscount(ID);
+            $("#airline").val(discount.Airline);
+            $("#flyfrom").val(discount.Flyfrom);
+            $("#flyto").val(discount.Flyto);
+            $("#startdate").val(discount.Startdate);
+            $("#finishdate").val(discount.Finishdate);
+            $("#discount").val(discount.Discount);
+        }
+        
+                function getDiscount(id) {
+            for (i in discounts) {
+                if (discounts[i].Id == id)
+                    return discounts[i];
+            }
+            return null;
+        }
+ --------------------------------------------------------       
    
    //HTML!!!!
    -------------------
