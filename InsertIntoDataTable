@@ -1,0 +1,52 @@
+            ajaxCall("GET", "../api/Discounts", "", getSuccess, error);
+            
+            
+                    function getSuccess(discountsdata) {
+            discounts = discountsdata; // keep the discounts array in a global variable;
+            try {
+                tbl = $('#discountsTable').DataTable({
+                    data: discountsdata,
+                    pageLength: 5,
+                    columns: [
+                        {
+                            render: function (data, type, row, meta) {
+                                let discountsdata = "data-ID='" + row.Id + "'";
+
+                                editBtn = "<button type='button' class = 'editBtn btn btn-success' " + discountsdata + "> Edit </button>";                             
+                                deleteBtn = "<button type='button' class = 'deleteBtn btn btn-danger' " + discountsdata + "> Delete </button>";
+                                return editBtn + deleteBtn;
+                            }
+                        },
+                        { data: "Id" },
+                        { data: "Airline" },
+                        { data: "Flyfrom" },
+                        { data: "Flyto" },
+                        { data: "Startdate" },
+                        { data: "Finishdate" },
+                        { data: "Discount" },
+                    ],
+                });
+                buttonEvents();
+            }
+
+            catch (err) {
+                alert(err);
+            }
+        }
+        
+                // this function is activated in case of a failure
+        function error(err) {
+            swal("Error: " + err);
+        }
+ --------------------------------------------
+ REDRAW A DATATABLE
+ --------------------------------------------
+        
+                // redraw a datatable with new data
+        function redrawTable(tbl, data) {
+            tbl.clear();
+            for (var i = 0; i < data.length; i++) {
+                tbl.row.add(data[i]);
+            }
+            tbl.draw();
+        }
