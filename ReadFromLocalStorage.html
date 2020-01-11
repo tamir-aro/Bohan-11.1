@@ -1,0 +1,52 @@
+#Read From Local Storage        
+
+function getmyflightsList() {
+
+            value = []
+            // iterate localStorage
+            for (var i = 0; i < localStorage.length; i++) {
+
+                // set iteration key name
+                var key = localStorage.key(i);
+
+
+
+                // use key name to retrieve the corresponding value
+                try {
+                    value[i] = JSON.parse(localStorage.getItem(key));
+                }
+                catch (err) {
+                    console.log(err)
+                }
+            }
+            document.getElementById('result').innerHTML = "";
+            str = `    <h1>Flight Details:</h1>
+                                                        <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                        <th>#</th>
+                                                        <th> Price </th>
+                                                        <th> Departure </th>
+                                                        <th> Arrival Time </th>
+                                                        <th> Departure City </th>
+                                                        <th> Arrival City </th>
+                                                        <th> Airlines </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>`;
+            for (var i = 0; i < value.length; i++) {
+                str += `
+                                                    <tr>
+                                                    <td>${i + 1}</td>
+                                                    <td id="price${i}"> ${value[i].price} € </td>
+                                                    <td id="departDate${i}"> ${value[i].departDate} </td>
+                                                    <td id="returnDate${i}"> ${value[i].returnDate} </td>
+                                                    <td id="flyFrom${i}"> ${value[i].flyFrom}</td>
+                                                    <td id="flyTo${i}"> ${value[i].flyTo} </td>
+                                                    <td id="airlines${i}"> ${value[i].airlines} </td>
+                                                    </tr>
+                                                    </tbody>`
+            }
+            str += `</table>`;
+            document.getElementById('result').innerHTML += str;
+        }
