@@ -1,0 +1,41 @@
+                   $(document).on("click", ".deleteBtn", function () {
+                mode = "delete";
+                markSelected(this);
+                var Id = this.getAttribute('data-ID');
+                swal({ // this will open a dialouge
+                    title: "Are you sure ??",
+                    text: "",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                })
+                    .then(function (willDelete) {
+                        if (willDelete) DeleteDiscount(Id);
+                        else swal("Not Deleted!");
+                    });
+            });
+            -------------------------------------------------------------------------
+       
+       function DeleteDiscount(id) {
+            ajaxCall("DELETE", "../api/Discounts/" + id, "", deleteSuccess, error);
+        }
+        
+        -------------------------------------------------------------------------
+                // success callback function after delete
+        function deleteSuccess(discountsdata) {
+            tbl.clear();
+            redrawTable(tbl, discountsdata);
+            buttonEvents(); // after redrawing the table, we must wire the new buttons
+            $("#editDiv").hide();
+            swal("Deleted Successfuly!", "Great Job", "success");
+            mode = "";
+        }
+
+        // redraw a datatable with new data
+        function redrawTable(tbl, data) {
+            tbl.clear();
+            for (var i = 0; i < data.length; i++) {
+                tbl.row.add(data[i]);
+            }
+            tbl.draw();
+        }
